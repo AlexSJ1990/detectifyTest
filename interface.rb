@@ -12,4 +12,3 @@ url_array = []
 url_array.each do |url|
   take_screenshot(url)
 end
-
