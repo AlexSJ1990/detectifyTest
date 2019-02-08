@@ -1,9 +1,9 @@
 require "sqlite3"
 
 dir = File.dirname(__FILE__)
-db = SQLite3::Database.new(File.join(dir, "db/.db"))
+DB = SQLite3::Database.new(File.join(dir, "db/screenshots"))
 
-db.execute('DROP TABLE IF EXISTS `screenshots`;')
+DB.execute('DROP TABLE IF EXISTS `screenshots`;')
 create_statement = "
 CREATE TABLE `screenshots` (
   `id`  INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -18,4 +18,6 @@ CREATE TABLE `users` (
   `password` VARCHAR
 );"
 
-db.execute(create_statement)
+DB.execute(create_statement)
+
+
