@@ -2,7 +2,10 @@ require 'watir'
 require 'csv'
 require 'json'
 require 'date'
-require_relative 'db'
+# require 'sqlite3'
+require_relative "save"
+# require_relative 'db'
+
 
 class Screenshot
   # TODO: need to get the user to name the files they are sending e.g. "Monday Screenshots"
@@ -25,14 +28,11 @@ class Screenshot
       get_urls_from_file(parse_csv)
     elsif @data_description == "json"
       get_urls_from_file(parse_json)
-      # this code needs to be separated
-      @files.each do |file|
-        @img = file
-        blob = SQLite3::Blob.new @img.to_s
-        DB.execute("INSERT INTO screenshots (file, user_id) VALUES (?, ?)", blob, @user_id)
-      end
-      p DB.execute("SELECT * FROM screenshots")
     end
+    @files.each do |file|
+      save(file, @user_id) # this calls out db methods
+    end
+    # p DB.execute("SELECT * FROM screenshots")
   end
 
   private
@@ -52,9 +52,6 @@ class Screenshot
 
     screenshot = browser.screenshot.save "images/#{website_name} - #{DateTime.now.strftime("%e %b %Y %H:%M:%S%p")}.png"
     @files << screenshot
-    # p @files
-
-    # p DB.execute("SELECT file FROM screenshots")
   end
 
   def parse_csv
@@ -73,5 +70,5 @@ class Screenshot
 end
 
 # p Screenshot.new('csv', 'urls.csv').parse_or_screenshot
-new = Screenshot.new('json', 'urls.json', 'monday files').parse_or_screenshot
-
+# new = Screenshot.new('json', 'urls.json', 'monday files').parse_or_screenshot
+new = Screenshot.new('url', 'https://www.google.com', 'files').parse_or_screenshot
