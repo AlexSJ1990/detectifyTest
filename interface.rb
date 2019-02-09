@@ -1,5 +1,6 @@
 # require_relative 'screenshot'
-require_relative 'user'
+require_relative 'app/models/users'
+require_relative 'app/controllers/screenshots_controller'
 
 # @user.logged_on?
 # if false
@@ -33,64 +34,61 @@ require_relative 'user'
 #   take_screenshot(url)
 # end
 
+class Router
 
-@running = true
-
-
-
-def run
-  puts "Welcome to our url to screenshot app!"
-  puts "           --           "
-  while @running
-    # authenticate
-    display_tasks
-    action = ask_action
-    route_action(action)
-  end
-end
-
-# needs to be put in a separate file to run the program
-
-
-private
-
-  def display_tasks
-    puts ""
-    puts "           What do you want to do next?"
-    puts "           1 - login or register"
-    puts "           2 - Enter urls via the terminal"
-    puts "           3 - Upload a csv with urls"
-    puts "           4 - Upload a json with urls"
-    puts "           5 - retrieve screenshots"
-    puts "           5 - Exit the program"
-    puts ""
+  def initialize
+    @running = true
+    @screenshots_controller = ScreenshotsController.new
   end
 
-  def route_action(action)
-    case action
-    when 1 then
-    when 2 then
-    when 3 then stop
-    else
-      puts "Please press 1, 2, or 3"
+  def run
+    puts "Welcome to our url to screenshot app!"
+    puts "           --           "
+    while @running
+      # authenticate
+      display_tasks
+      action = ask_action
+      route_action(action)
     end
   end
 
-  def ask_action
-    puts "What do you want to do next?"
-    print "===> "
-    gets.chomp.to_i
-  end
+  private
 
-  def authenticate
-    puts ""
-    puts "         Enter 1 to Login"
-    puts "         Enter 2 to Register"
-  end
+    def display_tasks
+      puts ""
+      puts "           What do you want to do next?"
+      puts "           1 - login or register"
+      puts "           2 - get screenshots of urls"
+      puts "           3 - retrieve screenshots"
+      puts "           4 - Exit the program"
+      puts ""
+    end
 
-   def stop
-    @running = false
-  end
+    def route_action(action)
+      case action
+      when 1 then
+      when 2 then @screenshots_controller.create
+      when 3 then
+      when 4 then stop
+      else
+        puts "Please press 1, 2, 3 or 4"
+      end
+    end
 
-run
+    def ask_action
+      puts "What do you want to do next?"
+      print "===> "
+      gets.chomp.to_i
+    end
+
+    def authenticate
+      puts ""
+      puts "         Enter 1 to Login"
+      puts "         Enter 2 to Register"
+    end
+
+     def stop
+      @running = false
+    end
+end
 

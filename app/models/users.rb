@@ -1,7 +1,7 @@
 class User
-  def initialize(username, password)
-    @username = username
-    @password = password
+  def initialize(attr = {})
+    @username = attr[:username]
+    @password = attr[:password]
     @logged_on = false
   end
 
