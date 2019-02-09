@@ -14,31 +14,11 @@ require_relative 'app/controllers/screenshots_controller'
 # answer = gets.chomp
 # if answer = 1 one_url
 
-# DB = SQLite3::Database.new("db/screenshots")
-
-  def one_url
-    answer = nil
-    url_array = []
-
-    until answer == ""
-      puts "Hello type your url's here to get screenshots, if you have finished entering click return"
-      answer = gets.chomp
-      url_array << answer unless answer == ""
-    end
-    # invoke get&store(type(1,2 or 3), url, user_id)
-  end
-
-  # elsif
-
-# url_array.each do |url|
-#   take_screenshot(url)
-# end
-
 class Router
-
   def initialize
     @running = true
     @screenshots_controller = ScreenshotsController.new
+    @user = User.new
   end
 
   def run
@@ -50,6 +30,7 @@ class Router
       action = ask_action
       route_action(action)
     end
+
   end
 
   private
@@ -68,7 +49,7 @@ class Router
       case action
       when 1 then
       when 2 then @screenshots_controller.create
-      when 3 then
+      when 3 then @screenshots_controller.retrieve
       when 4 then stop
       else
         puts "Please press 1, 2, 3 or 4"

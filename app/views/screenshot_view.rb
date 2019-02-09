@@ -21,4 +21,13 @@ class ScreenshotView
   def print_info(info)
     puts "#{info}"
   end
+
+  def print_success
+    puts "it worked!"
+  end
+
+  def print_failure
+    puts "it didn't work"
+  end
 end
+

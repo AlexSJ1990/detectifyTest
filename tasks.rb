@@ -3,7 +3,7 @@ require 'csv'
 require 'json'
 require 'date'
 # require 'sqlite3'
-require_relative "save"
+# require_relative "save"
 # require_relative 'db'
 
 
@@ -26,9 +26,9 @@ class Task
     elsif data_description == "3"
       get_urls_from_file(parse_json)
     end
-    @files.each do |file|
-      save(file, user_id) # this calls out db methods
-    end
+    # @files.each do |file|
+    #   save(file, user_id) # this calls out db methods
+    # end
     # p DB.execute("SELECT * FROM screenshots")
   end
 
