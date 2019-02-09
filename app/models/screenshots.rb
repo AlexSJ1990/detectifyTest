@@ -5,8 +5,6 @@ class Screenshot
   def initialize(attr = {})
     @data_description = attr[:data_description]
     @data = attr[:data]
-    # @files = []
     @user_id = nil
-    # @file_ref = attr[:file_ref]
   end
 end
