@@ -16,7 +16,7 @@ CREATE TABLE screenshots (
 create_statement2 = "
 CREATE TABLE users (
   `id`  INTEGER PRIMARY KEY AUTOINCREMENT,
-  `username` VARCHAR,
+  `username` VARCHAR UNIQUE,
   `password` VARCHAR
 );"
 
