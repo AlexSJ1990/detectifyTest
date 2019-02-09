@@ -7,36 +7,35 @@ require_relative "save"
 # require_relative 'db'
 
 
-class Screenshot
-  # TODO: need to get the user to name the files they are sending e.g. "Monday Screenshots"
-  # then when they want to retrieve, you'll have to present all their file_ref names so that they can choose
-  attr_reader :files
-  def initialize(data_description, data, file_ref)
-    @data_description = data_description
+class Task
+  # TODO: data_description, data, user id as instance variables?
+  def initialize(data)
     @data = data
     @files = []
-    @user_id = nil
-    @file_ref = file_ref
   end
 
-  def parse_or_screenshot
+  def parse_or_screenshot(data_description, user_id)
     # need to get user to say whether url or csv or json
     # if so, need to pass the path of the file
-    if @data_description == "url"
+    # p "the data_description in parse or screenshot is #{data_description}"
+    # p "the data in parse or screenshot is #{@data}"
+    if data_description == "1"
       take_screenshot(@data)
-    elsif @data_description == "csv"
+    elsif data_description == "2"
       get_urls_from_file(parse_csv)
-    elsif @data_description == "json"
+    elsif data_description == "3"
       get_urls_from_file(parse_json)
     end
     @files.each do |file|
-      save(file, @user_id) # this calls out db methods
+      save(file, user_id) # this calls out db methods
     end
     # p DB.execute("SELECT * FROM screenshots")
   end
 
   private
 
+
+  # where can we use this
   def get_urls_from_file(data)
     data.each do |item|
       take_screenshot(item)
@@ -57,18 +56,20 @@ class Screenshot
   def parse_csv
     urls = []
     CSV.foreach(@data) do |row|
-      urls << row[0]
+      # we are iterating over rows which have an Array type so an empty array will be [] - so don't push to urls array
+      urls << row[0] unless row == []
     end
     urls
   end
 
   def parse_json
+    # p "the data in parse json is #{@data}"
     serialized_urls = File.read(@data)
     results = JSON.parse(serialized_urls)
     results["urls"].values
   end
 end
 
-# p Screenshot.new('csv', 'urls.csv').parse_or_screenshot
-# new = Screenshot.new('json', 'urls.json', 'monday files').parse_or_screenshot
-new = Screenshot.new('url', 'https://www.google.com', 'files').parse_or_screenshot
+# p new = Task.new().parse_or_screenshot('1', 'https://www.google.com', 'files')
+# p new2 = Task.new('urls.csv').parse_or_screenshot('2', 'test')
+# p new3 = Task.new('urls.json').parse_or_screenshot('3', 'monday files')
