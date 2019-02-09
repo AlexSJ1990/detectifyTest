@@ -1,4 +1,8 @@
+require 'bcrypt'
+
 class User
+  include BCrypt
+  attr_reader :username
   def initialize(attr = {})
     @username = attr[:username]
     @password = attr[:password]
@@ -9,7 +13,13 @@ class User
     @logged_on
   end
 
-  # def login
-  #   @logged_on = true
-  # end
+  def password
+    @password ||= Password.new(password_hash)
+  end
+
+  def password=(new_password)
+    @password = Password.create(new_password)
+    self.password_hash = @password
+  end
 end
+
