@@ -1,19 +1,6 @@
-# require_relative 'screenshot'
 require_relative 'app/models/users'
 require_relative 'app/controllers/screenshots_controller'
 require_relative 'app/controllers/users_controller'
-
-# @user.logged_on?
-# if false
-# tell user to login - use puts
-# gets userid
-# gets password
-# authenticate (this method resides in the database setup file)
-# if not authenticated loop back to login + puts error message
-
-# enter 1 to enter urls, enter 2 to use a csv file enter 3 to use json file
-# answer = gets.chomp
-# if answer = 1 one_url
 
 class Router
   def initialize
@@ -25,11 +12,9 @@ class Router
   def run
     puts "Welcome to our url to screenshot app!"
     puts "           --           "
-     # here we want to test whether logged in or not
     display_login_tasks
     action = gets.chomp.to_i
-    route_login_action(action)
-    p @user
+    @user = route_login_action(action)
     while @running && @user.logged_on?
       display_tasks
       action = ask_action
@@ -57,7 +42,7 @@ class Router
 
     def route_action(action)
       case action
-      # when 1 then @users_controller.authenticate
+      when 1 then stop
       when 2 then @screenshots_controller.create
       when 3 then @screenshots_controller.retrieve
       when 4 then stop
@@ -68,8 +53,8 @@ class Router
 
     def route_login_action(action)
       case action
-      when 1 then @users_controller.authenticate
-      when 2 then
+      when 1 then @users_controller.login
+      when 2 then @users_controller.register
       else
         puts "Please press 1 or 2"
       end
@@ -83,6 +68,7 @@ class Router
 
      def stop
       @running = false
+      puts "you are logged out"
     end
 end
 
