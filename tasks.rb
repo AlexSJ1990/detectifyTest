@@ -2,6 +2,7 @@ require 'watir'
 require 'csv'
 require 'json'
 require 'date'
+require 'selenium-webdriver'
 # require 'sqlite3'
 # require_relative "save"
 # require_relative 'db'
@@ -34,8 +35,6 @@ class Task
 
   private
 
-
-  # where can we use this
   def get_urls_from_file(data)
     data.each do |item|
       take_screenshot(item)
@@ -43,7 +42,7 @@ class Task
   end
 
   def take_screenshot(url)
-    browser = Watir::Browser.new
+    browser = Watir::Browser.new(:chrome, {:chromeOptions => {:args => ['--headless', '--window-size=1200x600']}})
 
     match_data = url.match(/((http|https):\/\/www.|www.)(?<website>(\w+))..+/)
     website_name = match_data[1]
@@ -72,4 +71,4 @@ end
 
 # p new = Task.new().parse_or_screenshot('1', 'https://www.google.com', 'files')
 # p new2 = Task.new('urls.csv').parse_or_screenshot('2', 'test')
-# p new3 = Task.new('urls.json').parse_or_screenshot('3', 'monday files')
+# new3 = Task.new('urls.json').parse_or_screenshot('3', 'monday files')

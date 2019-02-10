@@ -25,10 +25,11 @@ class Router
   def run
     puts "Welcome to our url to screenshot app!"
     puts "           --           "
-    # @user = @users_controller.authenticate # here we want to test whether logged in or not
+     # here we want to test whether logged in or not
     display_login_tasks
     action = gets.chomp.to_i
     route_login_action(action)
+    p @user
     while @running && @user.logged_on?
       display_tasks
       action = ask_action
