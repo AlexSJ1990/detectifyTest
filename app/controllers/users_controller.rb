@@ -10,6 +10,7 @@ class UsersController
   end
 
   def register
+    @view.print_info("        Register here")
     username = @view.get_info("       what is your username?")
     password = @view.get_info("       What is your password?")
     user = User.new(username: username, password: password)
@@ -23,18 +24,23 @@ class UsersController
   end
 
   def login
-    username = @view.get_info("what is your username?")
-    password = @view.get_info("What is your password?")
+    username = @view.get_info("       what is your username?")
+    password = @view.get_info("       What is your password?")
     user = find_user(username).flatten
-    @user = User.new(username: user[1], password: user[2])
-    my_password = BCrypt::Password.new(@user.password)
-    if @user && (my_password == password)
-      @view.print_info("        Welcome #{@user.username.capitalize}")
-      @user.login
-      return @user
+    if user == []
+      @view.print_info("        You cannot be found on our system, please register first")
+      register
     else
-      @view.print_info("        Sorry invalid details")
-      login
+      @user = User.new(id: user[0], username: user[1], password: user[2])
+      my_password = BCrypt::Password.new(@user.password)
+      if @user && (my_password == password)
+        @view.print_info("        Welcome #{@user.username.capitalize}")
+        @user.login
+        return @user
+      else
+        @view.print_info("        Sorry invalid details")
+        login
+      end
     end
   end
 end

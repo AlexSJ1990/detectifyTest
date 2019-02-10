@@ -5,7 +5,7 @@ require_relative 'app/controllers/users_controller'
 class Router
   def initialize
     @running = true
-    @screenshots_controller = ScreenshotsController.new
+    # @screenshots_controller = ScreenshotsController.new(@user)
     @users_controller = UsersController.new
   end
 
@@ -41,6 +41,7 @@ class Router
     end
 
     def route_action(action)
+      @screenshots_controller = ScreenshotsController.new(@user)
       case action
       when 1 then stop
       when 2 then @screenshots_controller.create

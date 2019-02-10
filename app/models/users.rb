@@ -1,6 +1,7 @@
 class User
-  attr_reader :username, :password
+  attr_reader :username, :password, :id
   def initialize(attr = {})
+    @id = attr[:id]
     @username = attr[:username]
     @password = attr[:password]
     @logged_on = false
