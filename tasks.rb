@@ -3,16 +3,12 @@ require 'csv'
 require 'json'
 require 'date'
 require 'selenium-webdriver'
-# require 'sqlite3'
-# require_relative "save"
-# require_relative 'db'
-
 
 class Task
   # TODO: data_description, data, user id as instance variables?
   def initialize(data)
     @data = data
-    @files = []
+    # @files = []
   end
 
   def parse_or_screenshot(data_description, user_id)
@@ -36,33 +32,34 @@ class Task
   private
 
   def get_urls_from_file(data)
+    files = []
     data.each do |item|
-      take_screenshot(item)
+      files << take_screenshot(item)
     end
+      files
   end
 
   def take_screenshot(url)
-    browser = Watir::Browser.new(:chrome, {:chromeOptions => {:args => ['--headless', '--window-size=1200x600']}})
-
+    browser = Watir::Browser.new(:chrome,
+      {:chromeOptions => {:args => ['--headless', '--window-size=1200x600']}})
     match_data = url.match(/((http|https):\/\/www.|www.)(?<website>(\w+))..+/)
     website_name = match_data[1]
     browser.goto url
 
     screenshot = browser.screenshot.save "images/#{website_name} - #{DateTime.now.strftime("%e %b %Y %H:%M:%S%p")}.png"
-    @files << screenshot
   end
 
   def parse_csv
     urls = []
     CSV.foreach(@data) do |row|
-      # we are iterating over rows which have an Array type so an empty array will be [] - so don't push to urls array
+      # we are iterating over rows which have an Array type so an empty array
+      # will be [] so don't push to urls array
       urls << row[0] unless row == []
     end
     urls
   end
 
   def parse_json
-    # p "the data in parse json is #{@data}"
     serialized_urls = File.read(@data)
     results = JSON.parse(serialized_urls)
     results["urls"].values
