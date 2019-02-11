@@ -13,21 +13,21 @@ class ScreenshotView
   end
 
   def ask_for_info(info)
-    puts "#{info}"
+    puts "        #{info}"
     puts "===>"
     gets.chomp
   end
 
   def print_info(info)
-    puts "#{info}"
+    puts "        #{info}"
   end
 
   def print_success
-    puts "it worked!"
+    puts "        it worked!"
   end
 
   def print_failure
-    puts "it didn't work"
+    puts "        it didn't work"
   end
 end
 

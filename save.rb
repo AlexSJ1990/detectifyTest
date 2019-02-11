@@ -1,27 +1,34 @@
 require 'sqlite3'
-require 'base64'
 
 DB = SQLite3::Database.open("db/screenshots.db")
 
 def load_files(user_id)
-  stm = DB.prepare "select file from screenshots where user_id LIKE (?);"
+  stm = DB.prepare "select file, file_name from screenshots where user_id LIKE (?);"
   stm.bind_params(user_id)
-  files = stm.execute
+  rs = stm.execute
 
-  stm = DB.prepare "select file_name from screenshots where user_id LIKE (?);"
-  stm.bind_params(user_id)
-  files_names = stm.execute
+  p "rs column 1 = #{rs.columns[1]}"
 
-  iBlobs = files.map do |file|
-    iBlob = row.join
+
+  rs.each_with_index do |row, index|
+      iblob = rs.columns[0]
+      file_name = rs.columns[1]
+      p rs.columns[1]
+      fileOut = File.open "image.PNG", "wb"
+      fileOut.write iblob
+      fileOut.close
+      file_path = "screenshot_images" + file_name
+      p file_path
+      # file.rename("image.PNG", )
   end
+
   #### Make a file from a blob
-  iBlobs.each do |blob|
-    fileOut = File.open "screenshot_images/image#{((1..10).to_a.sample)}.PNG", "wb"
-    fileOut.write blob
-    fileOut.close
-  end
-  #### at this point the new file image2.PNG should miraculously appear
+  # iBlobs.each do |blob|
+
+  #
+  #
+  # end
+  # #### at this point the new file image2.PNG should miraculously appear
   puts "You will find your images in the directory that this application is running in, in a folder called screenshot_images"
 end
 
@@ -55,7 +62,23 @@ def save(file, file_name, file_group_name, user_id)
 end
 
 def find_user(username)
+  # begin
+  # db = SQLite3::Database.open "db/screenshots.db"
+  # if db
+  #   puts "Images DB is open"
+  # end
   DB.execute("SELECT * FROM USERS WHERE username LIKE ?", "#{username}")
+  # stm = db.prepare "SELECT * FROM USERS WHERE username LIKE ?;"
+  # stm.bind_params(username)
+  # rs = stm.execute
+  #   if db
+  #     db.close
+  #   end
+  # rescue SQLite3::Exception => e
+  #   puts "Exception occurred"
+  #   puts e
+  #   puts
+  # end
 end
 
 def save_user(user)
@@ -63,4 +86,5 @@ def save_user(user)
   password = user.password
   DB.execute("INSERT INTO USERS (username, password) VALUES (?, ?)", username, password)
 end
+
 

@@ -10,14 +10,11 @@ class Task
   def initialize(data)
     @data = data
     @image_name
-    # @files = []
   end
 
   def parse_or_screenshot(data_description, user_id)
     # need to get user to say whether url or csv or json
     # if so, need to pass the path of the file
-    # p "the data_description in parse or screenshot is #{data_description}"
-    # p "the data in parse or screenshot is #{@data}"
     if data_description == "1"
       take_screenshot(@data)
     elsif data_description == "2"
@@ -27,7 +24,7 @@ class Task
     end
   end
 
-  # private
+  private
 
   def get_urls_from_file(data)
     files = []
@@ -39,7 +36,7 @@ class Task
 
   def take_screenshot(url)
     browser = Watir::Browser.new(:chrome,
-      {:chromeOptions => {:args => ['--headless', '--window-size=1200x600']}})
+    {:chromeOptions => {:args => ['--headless', '--window-size=1200x600']}})
     match_data = url.match(/((http|https):\/\/www.|www.)(?<website>(\w+))..+/)
     website_name = match_data[1]
     browser.goto url
