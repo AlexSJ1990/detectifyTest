@@ -6,8 +6,10 @@ require 'selenium-webdriver'
 
 class Task
   # TODO: data_description, data, user id as instance variables?
+  attr_reader :image_name
   def initialize(data)
     @data = data
+    @image_name
     # @files = []
   end
 
@@ -23,13 +25,9 @@ class Task
     elsif data_description == "3"
       get_urls_from_file(parse_json)
     end
-    # @files.each do |file|
-    #   save(file, user_id) # this calls out db methods
-    # end
-    # p DB.execute("SELECT * FROM screenshots")
   end
 
-  private
+  # private
 
   def get_urls_from_file(data)
     files = []
@@ -45,8 +43,8 @@ class Task
     match_data = url.match(/((http|https):\/\/www.|www.)(?<website>(\w+))..+/)
     website_name = match_data[1]
     browser.goto url
-
-    screenshot = browser.screenshot.save "images/#{website_name} - #{DateTime.now.strftime("%e %b %Y %H:%M:%S%p")}.png"
+    @image_name = "images/#{website_name} - #{DateTime.now.strftime("%e %b %Y %H:%M:%S%p")}.png"
+    screenshot = browser.screenshot.save @image_name
   end
 
   def parse_csv

@@ -9,6 +9,8 @@ create_statement = "
 CREATE TABLE screenshots (
   `id`  INTEGER PRIMARY KEY AUTOINCREMENT,
   `file` BLOB,
+  `file_name` STRING,
+  `file_group_name` STRING,
   `user_id` INTEGER,
   FOREIGN KEY(user_id) REFERENCES user(id)
 );"
