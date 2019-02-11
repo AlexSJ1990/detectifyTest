@@ -44,6 +44,3 @@ class UsersController
     end
   end
 end
-
-# UsersController.new.register
-# UsersController.new.login

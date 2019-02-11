@@ -5,7 +5,6 @@ require_relative 'app/controllers/users_controller'
 class Router
   def initialize
     @running = true
-    # @screenshots_controller = ScreenshotsController.new(@user)
     @users_controller = UsersController.new
   end
 
@@ -15,10 +14,14 @@ class Router
     display_login_tasks
     action = gets.chomp.to_i
     @user = route_login_action(action)
-    while @running && @user.logged_on?
-      display_tasks
-      action = ask_action
-      route_action(action)
+    if @user.nil?
+      run
+    else
+      while @running && @user.logged_on?
+        display_tasks
+        action = ask_action
+        route_action(action)
+      end
     end
   end
 
@@ -44,7 +47,7 @@ class Router
       @screenshots_controller = ScreenshotsController.new(@user)
       case action
       when 1 then stop
-      when 2 then @screenshots_controller.create
+      when 2 then @screenshots_controller.create_files_from_cli_or_file
       when 3 then @screenshots_controller.retrieve
       when 4 then stop
       else
