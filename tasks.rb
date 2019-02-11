@@ -40,7 +40,7 @@ class Task
     match_data = url.match(/((http|https):\/\/www.|www.)(?<website>(\w+))..+/)
     website_name = match_data[1]
     browser.goto url
-    @image_name = "images/#{website_name} - #{DateTime.now.strftime("%e %b %Y %H:%M:%S%p")}.png"
+    @image_name = "images/#{website_name}#{DateTime.now.strftime("%e%b%Y%H%M%S%p")}.png"
     screenshot = browser.screenshot.save @image_name
   end
 

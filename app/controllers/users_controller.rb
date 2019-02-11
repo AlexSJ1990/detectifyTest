@@ -1,6 +1,6 @@
 require_relative "../views/user_view"
 require_relative "../models/users"
-require_relative '../../save'
+require_relative '../../persist'
 require 'bcrypt'
 
 class UsersController
@@ -35,6 +35,7 @@ class UsersController
       my_password = BCrypt::Password.new(@user.password)
       if @user && (my_password == password)
         @view.print_info("        Welcome #{@user.username.capitalize}")
+        @view.puts_space
         @user.login
         return @user
       else
