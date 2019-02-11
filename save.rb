@@ -3,40 +3,55 @@ require 'base64'
 
 DB = SQLite3::Database.open("db/screenshots.db")
 
-def load
-    DB.execute( "SELECT file FROM screenshots" ) do |file|
-    p file
-    fileOut = File.open "images/facebook - 10 Feb 2019 16:04:56PM.png", "wb"
-    fileOut.write iBlob
+def load_files(user_id)
+  stm = DB.prepare "select file from screenshots where user_id LIKE (?);"
+  stm.bind_params(user_id)
+  files = stm.execute
+
+  stm = DB.prepare "select file_name from screenshots where user_id LIKE (?);"
+  stm.bind_params(user_id)
+  files_names = stm.execute
+
+  iBlobs = files.map do |file|
+    iBlob = row.join
+  end
+  #### Make a file from a blob
+  iBlobs.each do |blob|
+    fileOut = File.open "screenshot_images/image#{((1..10).to_a.sample)}.PNG", "wb"
+    fileOut.write blob
     fileOut.close
   end
+  #### at this point the new file image2.PNG should miraculously appear
+  puts "You will find your images in the directory that this application is running in, in a folder called screenshot_images"
 end
 
-def save(file, user_id)
-  # don't think you can use file.count here
+def save(file, file_name, file_group_name, user_id)
   if file.class == Array
-  # if file.count > 0
-    p "I should be an array here"
     in_file = file[0]
-    p in_file.class
-
+    # p in_file.class
     fileIn = File.open in_file, "rb"
   else
-    p "I'm in the else - not an array"
     in_file = file
-    p in_file
+    # p in_file
     fileIn = File.open in_file, "rb"
   end
   img = fileIn.read
-  p img.class
+  # p "class of img is #{img.class}"
+  fileIn.close
   iBlob = SQLite3::Blob.new img
-  # p file
-  # @img = file
-  # p @img
-  # blob = SQLite3::Blob.new @img.to_s
-  # p blob
+  # p "Class of iBlob is #{iBlob.class}"
 
-  DB.execute("INSERT INTO screenshots (file, user_id) VALUES (?, ?)", iBlob, user_id)
+  #### insert into a db
+  #### open the database
+  dbname = "db/screenshots.db"
+  db = SQLite3::Database.open dbname
+  # if db
+  #     puts "Images DB" + dbname + " is open"
+  # end
+  #### insert iBlob into images table
+  stm = db.prepare "insert into screenshots (file, file_name, file_group_name, user_id) values (?, ?, ?, ?);"
+  stm.bind_params(iBlob, file_name, file_group_name, user_id)
+  rs = stm.execute
 end
 
 def find_user(username)
@@ -49,4 +64,3 @@ def save_user(user)
   DB.execute("INSERT INTO USERS (username, password) VALUES (?, ?)", username, password)
 end
 
-# load
