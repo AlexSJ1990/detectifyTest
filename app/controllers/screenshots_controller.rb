@@ -1,6 +1,6 @@
 require_relative "../views/screenshot_view"
 require_relative "../../tasks"
-require_relative "../../save"
+require_relative "../../persist"
 require_relative "../models/users"
 require_relative "../models/screenshots"
 
@@ -11,7 +11,6 @@ class ScreenshotsController
   end
 
   def retrieve
-    # p @user.id
     load_files(@user.id)
   end
 
@@ -31,7 +30,6 @@ class ScreenshotsController
   def create_files_from_cli_or_file
     @data_description = @view.screenshot_menu
     create_files_from_cli_or_file unless ["1", "2", "3"].include?(@data_description)
-    @save_path = @view.ask_for_info("        Please enter a name to identify your collection of files")
     @data_description == "1" ? create_from_cli : create_from_file
   end
 
@@ -48,7 +46,7 @@ class ScreenshotsController
       else
         unless answer == ""
           answer = Task.new(answer).parse_or_screenshot(@data_description, @user.id)
-          @image_name = "#{url} - #{DateTime.now.strftime("%e %b %Y %H:%M:%S%p")}.png"
+          @image_name = "#{url}#{DateTime.now.strftime("%e%b%Y%H%M%S%p")}.png"
           files << Screenshot.new(data: answer, file_name: @image_name, file_group_name: @save_path, user_id: @user.id)
         end
       end
@@ -57,14 +55,16 @@ class ScreenshotsController
   end
 
   def create_from_file
-    data = @view.ask_for_info("       what is the relative path of your file?")
-    # TODO need to handle exception here !!!
-    files = Task.new(data).parse_or_screenshot(@data_description, @user.id)
-    s_files = []
-    files.each do |file|
-      s_files << Screenshot.new(data: file, file_name: "test", file_group_name: @save_path, user_id: @user.id)
+    begin
+      data = @view.ask_for_info("       what is the relative path of your file?")
+      files = Task.new(data).parse_or_screenshot(@data_description, @user.id)
+      s_files = []
+      files.each_with_index do |file, i|
+        s_files << Screenshot.new(data: file, file_name: "#{DateTime.now.strftime("%e%b%Y%H%M%S%p")}_#{i}.png", file_group_name: @save_path, user_id: @user.id)
+      end
+      save_files(s_files)
+      rescue StandardError => e
+        puts e.message
     end
-    s_files
-    save_files(s_files)
   end
 end

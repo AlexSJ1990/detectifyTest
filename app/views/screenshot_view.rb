@@ -6,7 +6,7 @@ class ScreenshotView
     puts ""
     puts "          Enter 1 to enter urls via the terminal"
     puts "          Enter 2 to give the filepath of a csv file of urls"
-    puts "          Enter 3 to give the filepath of a json of urls)"
+    puts "          Enter 3 to give the filepath of a json of urls"
     puts ""
     puts "===>"
     gets.chomp

@@ -1,0 +1,3 @@
+db open
+Exception occurred
+unable to close due to unfinalized statements or unfinished backups
