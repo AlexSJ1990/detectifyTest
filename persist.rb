@@ -1,60 +1,50 @@
 require 'sqlite3'
 
 def load_files(user_id)
-    begin
-        iblob = []
-        file_name = []
-        ofname = "error.log"
-        outfile = File.open(ofname, "w")
-        db = SQLite3::Database.open("db/screenshots.db")
-        if db
-            outfile.puts "db open"
-        end
-        stm1 = db.prepare "select file from screenshots where user_id LIKE (?);"
-        stm1.bind_params(user_id)
-        stm2 = db.prepare "select file_name from screenshots where user_id LIKE (?);"
-        stm2.bind_params(user_id)
+  begin
+    iblob = []
+    file_name = []
+    outfile = File.open("error.log", "w")
+    db = SQLite3::Database.open("db/screenshots.db")
 
-        rs1 = stm1.execute
-        rs2 = stm2.execute
+    outfile.puts "db open" if db
 
-        rs2.each_with_index do |row, i|
-            file_name[i] = row.join
-        end
-        rs1.each_with_index do |row, i|
-            iblob[i] = row.join
-        end
+    stm1 = db.prepare "select file from screenshots where user_id LIKE (?);"
+    stm1.bind_params(user_id)
+    stm2 = db.prepare "select file_name from screenshots where user_id LIKE (?);"
+    stm2.bind_params(user_id)
 
-        nrow = file_name.count
-        for i in 0..nrow-1
-            # Make a file from a blob
-            fileOut = File.open "image.PNG", "wb"
-            fileOut.write iblob[i]
-            # now change the file name
-            fileOut.close
-            file_path = "screenshot_images" + "/" + file_name[i]
-            File.rename('image.PNG', file_path)
-        end
-        if db
-        db.close
-        puts "Images DB" + dbname + " is closed"
-        end
+    rs1 = stm1.execute
+    rs2 = stm2.execute
+
+    rs2.each do |row|
+      file_name << row.join
+    end
+
+    rs1.each do |row|
+      iblob << row.join
+    end
+
+    for i in 0..(file_name.count - 1)
+      # Make a file from a blob
+      # opening a binary file for writing in if it doesn't exist it will create it
+      fileOut = File.open "image.PNG", "wb"
+      fileOut.write iblob[i]
+      # now change the file name
+      fileOut.close
+      file_path = "screenshot_images" + "/" + file_name[i]
+      File.rename('image.PNG', file_path)
+    end
+    db.close if db
     rescue SQLite3::Exception => e
     outfile.puts "Exception occurred"
     outfile.puts e
-    end
-    puts "You will find your images in the directory that this application is running in, in a folder called screenshot_images"
+  end
 end
 
 
 def save(file, file_name, file_group_name, user_id)
-  if file.class == Array
-    in_file = file[0]
-    fileIn = File.open in_file, "rb"
-  else
-    in_file = file
-    fileIn = File.open in_file, "rb"
-  end
+  fileIn = File.open file, "rb"
   img = fileIn.read
   fileIn.close
   iBlob = SQLite3::Blob.new img
@@ -66,8 +56,8 @@ def save(file, file_name, file_group_name, user_id)
 end
 
 def find_user(username)
-    db = SQLite3::Database.open "db/screenshots.db"
-    db.execute("SELECT * FROM USERS WHERE username LIKE ?", "#{username}")
+  db = SQLite3::Database.open "db/screenshots.db"
+  statement = db.execute("SELECT * FROM USERS WHERE username LIKE ?", "#{username}")
 end
 
 def save_user(user)

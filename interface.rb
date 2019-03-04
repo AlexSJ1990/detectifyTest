@@ -33,7 +33,6 @@ class Router
       puts "           1 - logout"
       puts "           2 - get screenshots of urls"
       puts "           3 - retrieve screenshots"
-      puts "           4 - Exit the program"
       puts ""
     end
 
@@ -49,7 +48,6 @@ class Router
       when 1 then stop
       when 2 then @screenshots_controller.create_files_from_cli_or_file
       when 3 then @screenshots_controller.retrieve
-      when 4 then stop
       else
         puts "Please press 1, 2, 3 or 4"
       end
