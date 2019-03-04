@@ -15,8 +15,6 @@ class UsersController
     password = @view.get_info("       What is your password?")
     user = User.new(username: username, password: password)
     user.encrypt
-    my_password = BCrypt::Password.new(user.password)
-    my_password == password
     save_user(user)
     @view.print_info("        Great, you are registered! \n")
     @view.print_info("        Please now login")

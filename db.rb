@@ -1,6 +1,5 @@
 require "sqlite3"
 
--- dir = File.dirname(__FILE__)
 db = SQLite3::Database.new("db/screenshots.db")
 db.execute('DROP TABLE IF EXISTS `screenshots`;')
 db.execute('DROP TABLE IF EXISTS `users`;')

@@ -12,6 +12,7 @@ class ScreenshotsController
 
   def retrieve
     load_files(@user.id)
+    @view.print_info("       You will find your images in the directory that this application is running in, in a folder called screenshot_images")
   end
 
   def save_files(files)
@@ -23,7 +24,7 @@ class ScreenshotsController
       file = files.first
       save(file.data, file.file_name, @save_path, @user.id)
     else
-      puts @view.print_info("       Please try again, there appear to be no urls")
+      @view.print_info("       Please try again, there appear to be no urls")
     end
   end
 
@@ -32,6 +33,8 @@ class ScreenshotsController
     create_files_from_cli_or_file unless ["1", "2", "3"].include?(@data_description)
     @data_description == "1" ? create_from_cli : create_from_file
   end
+
+  private
 
   def create_from_cli
     answer = nil
