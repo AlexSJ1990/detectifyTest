@@ -1,14 +1,14 @@
-##A CLI built using Ruby that allows users to:
+## A CLI built using Ruby that allows users to:
 . enter urls via the command line
 . upload urls via csv file
 . or json format and store and return screenshots of the urls.
 
-##How to start
+## How to start
 . Clone this repo
 . *bundle install* all of the gems within the gemfile
 . move to home directory for the files and run ruby app.rb
 
-##Functionality
+## Functionality
 . First register an account
 . Login
 . save screenshots of urls Ð option 2
@@ -17,14 +17,14 @@
 . option 3 upload urls from json file
 . retrieve saved screenshots at any time option 3
 
-##Format expected for csv or json files
+## Format expected for csv or json files
 
-###CSV
+### CSV
 . Only urls with no headers should be uploaded - example below:
 	http://www.youtube.com
-  http://www.facebook.com
+  	http://www.facebook.com
 
-###JSON
+### JSON
 . Ensure that you have a key ÒurlsÓ and you store your urls within the values example below:
 {
   "urls": {
@@ -33,7 +33,7 @@
   }
 }
 
-##Scaling
+## Scaling
 Parse and screenshot methods have been built in a separate group to enable scalability. For production I would not use SQLIte3 but Postgres or MySQL.
 
 
